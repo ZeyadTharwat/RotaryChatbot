@@ -6,7 +6,6 @@ import AppContext from "../AppContext";
 import { setUserId } from "../widgetSlice";
 import { Header } from "./Header";
 import { Keypad } from "./Keypad";
-import { Launcher } from "./Launcher";
 import { Messages } from "./Messages";
 export const WidgetLayout = (props) => {
   const dispatch = useDispatch();
@@ -47,10 +46,8 @@ export const WidgetLayout = (props) => {
   return (
     <AppContext.Provider value={{ userId: userIdRef.current, ...props }}>
       <AnimatePresence>
-        {toggleWidget && (
           <motion.div
-            className="fixed bottom-5 right-5 z-50 flex h-[579px] w-[400px]  flex-col rounded-[1.8rem]   bg-white  font-lato   shadow-md xs:right-0 xs:h-[calc(100%-100px)] xs:w-full"
-            animate={{ y: -60 }}
+            className="fixed bottom-0 right-0 z-50 flex  flex-col rounded-[1.8rem] bg-white font-lato shadow-md xs:right-0  w-full h-full"
             exit={{ opacity: 0 }}
             transition={{ type: "spring", stiffness: 100 }}
             key="widget"
@@ -59,8 +56,6 @@ export const WidgetLayout = (props) => {
             <Messages />
             <Keypad />
           </motion.div>
-        )}
-        <Launcher />
       </AnimatePresence>
     </AppContext.Provider>
   );

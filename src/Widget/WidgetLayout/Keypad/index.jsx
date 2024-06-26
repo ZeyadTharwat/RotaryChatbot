@@ -6,9 +6,9 @@ import { createUserMessage } from "../../../utils/helpers";
 import AppContext from "../../AppContext";
 import {
   addMessage,
-  fetchBotResponse,
   toggleBotTyping,
   toggleUserTyping,
+  fetchBotResponse, // Added fetchBotResponse import
 } from "../Messages/messageSlice";
 import axios from "axios";
 
@@ -33,11 +33,22 @@ export const Keypad = () => {
 
   const handleSubmit = async () => {
     if (userInput.length > 0) {
-      // Send user message to API endpoint
       try {
-        const response = await axios.post("https://test-api-url/ask_rotary", {
+        const response = await axios.post(`https://ilegal-rasa.solutions/ask_rotary`, {
           message: userInput.trim(),
         });
+
+        const botMessages = response.data.map((item) => ({
+          text: item.text,
+          type: "text",
+          sender: "BOT",
+          ts: new Date().toISOString(),
+        }));
+
+        botMessages.forEach((botMessage) => {
+          dispatch(addMessage(botMessage)); // Use addMessage instead of addBotMessage
+        });
+
         console.log("Message sent successfully:", response.data);
       } catch (error) {
         console.error("Error sending message:", error);
@@ -49,18 +60,11 @@ export const Keypad = () => {
       setUserInput("");
       dispatch(toggleUserTyping(false));
       dispatch(toggleBotTyping(true));
-      dispatch(
-        fetchBotResponse({
-          rasaServerUrl,
-          message: userInput.trim(),
-          sender: userId,
-        })
-      );
     }
   };
 
   return (
-    <div className="mt-auto flex h-[12%] items-center rounded-t-3xl rounded-b-[2rem] bg-slate-50">
+    <div className="mt-auto flex h-[12%] items-center rounded-t-3xl bg-slate-50">
       <Textarea
         rows="1"
         className={`mx-4 block w-full resize-none bg-slate-50 p-2.5 text-sm text-gray-900 outline-none ${

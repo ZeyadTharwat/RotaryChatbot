@@ -73,7 +73,7 @@ export const Header = () => {
   return (
     <>
       <div
-        className="relative flex h-[20%]  cursor-default items-center space-x-4  rounded-t-[1.8rem]  p-2 shadow-lg drop-shadow"
+        className="relative flex h-[20%]  cursor-default items-center space-x-4    p-2 shadow-lg drop-shadow"
         style={{ backgroundColor, color: textColor }}
       >
         <div
