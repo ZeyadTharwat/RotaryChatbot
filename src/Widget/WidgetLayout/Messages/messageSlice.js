@@ -25,6 +25,7 @@ const initialState = {
   userTypingPlaceholder: "Type your message here...",
   userGreeted: false,
 };
+
 export const messagesSlice = createSlice({
   name: "messages",
   initialState,

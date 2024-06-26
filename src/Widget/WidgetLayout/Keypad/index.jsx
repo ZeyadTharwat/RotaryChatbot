@@ -8,7 +8,7 @@ import {
   addMessage,
   toggleBotTyping,
   toggleUserTyping,
-  fetchBotResponse, // Added fetchBotResponse import
+  fetchBotResponse,
 } from "../Messages/messageSlice";
 import axios from "axios";
 
@@ -33,6 +33,16 @@ export const Keypad = () => {
 
   const handleSubmit = async () => {
     if (userInput.length > 0) {
+      // Dispatch user message immediately
+      dispatch(addMessage(createUserMessage(userInput.trim())));
+
+      // Clear user input
+      setUserInput("");
+
+      // Show typing indicator
+      dispatch(toggleUserTyping(false));
+      dispatch(toggleBotTyping(true));
+
       try {
         const response = await axios.post(`https://ilegal-rasa.solutions/ask_rotary`, {
           message: userInput.trim(),
@@ -45,21 +55,21 @@ export const Keypad = () => {
           ts: new Date().toISOString(),
         }));
 
+        // Dispatch bot messages
         botMessages.forEach((botMessage) => {
-          dispatch(addMessage(botMessage)); // Use addMessage instead of addBotMessage
+          dispatch(addMessage(botMessage));
         });
 
         console.log("Message sent successfully:", response.data);
       } catch (error) {
         console.error("Error sending message:", error);
         // Handle error as needed
+      } finally {
+        // Hide typing indicator
+        dispatch(toggleBotTyping(false));
+        // Re-enable user typing
+        dispatch(toggleUserTyping(true));
       }
-
-      // Dispatch actions for messaging system
-      dispatch(addMessage(createUserMessage(userInput.trim())));
-      setUserInput("");
-      dispatch(toggleUserTyping(false));
-      dispatch(toggleBotTyping(true));
     }
   };
 
