@@ -9,7 +9,6 @@
 /coverage
 
 # production
-/build
 
 /src/scss
 /src/assets
